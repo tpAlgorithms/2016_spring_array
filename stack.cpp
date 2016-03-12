@@ -9,8 +9,8 @@ struct stack_t {
 };
 
 void stack_init(stack_t &stack) {
-  stack.data = new int[stack_t::DEFAULT_SIZE];
-  stack.capacity = stack_t::DEFAULT_SIZE;
+  stack.data = NULL; //new int[stack_t::DEFAULT_SIZE];
+  stack.capacity = 0; //stack_t::DEFAULT_SIZE;
   stack.size = 0;
 }
 
@@ -21,6 +21,10 @@ void swap(T &a, T &b) {
   b = tmp;
 }
 
+int max(int a, int b) {
+  return a > b ? a : b;
+}
+
 void stack_resize(stack_t &stack, int new_capacity) {
   int *tmp = new int[new_capacity];
   for (int i = 0; i < stack.size && i < new_capacity; ++i) {
@@ -28,7 +32,8 @@ void stack_resize(stack_t &stack, int new_capacity) {
   }
   //delete [] stack.data;
   swap(stack.data, tmp);
-  delete [] stack.data;
+  delete [] tmp;
+
   stack.capacity = new_capacity;
   if (new_capacity < stack.size) {
     stack.size = new_capacity;
@@ -37,7 +42,7 @@ void stack_resize(stack_t &stack, int new_capacity) {
 
 void stack_push(stack_t &stack, int value) {
   if (stack.size == stack.capacity) {
-    stack_resize(stack, stack.capacity * 2);
+    stack_resize(stack, max(1, stack.capacity * 2));
   }
   stack.data[stack.size] = value;
   ++stack.size;
